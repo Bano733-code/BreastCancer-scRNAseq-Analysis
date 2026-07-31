@@ -163,7 +163,7 @@ Example markers:
 | Fibroblasts | COL1A1, COL3A1 |
 
 <p align="center">
-<img src="figures/Marker_HeatMap/Marker_Heatmap.png" width="700">
+<img src="figures/Marker_Heatmap/Marker_Heatmap.png" width="700">
 </p>
 
 
