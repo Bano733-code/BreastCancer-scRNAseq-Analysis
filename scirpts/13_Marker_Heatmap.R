@@ -15,7 +15,7 @@ DEGs <- read.csv("results/Differential_Expression/All_DEGs.csv")
 
 top10 <- DEGs %>%
   group_by(cluster) %>%
-  slice_max(order_by = avg_log2FC, n = 5)
+  slice_max(order_by = avg_log2FC, n = 10)
 ###############################################################
 # Marker Heatmap
 ###############################################################
@@ -31,8 +31,8 @@ heatmap_plot <- DoHeatmap(
 ggsave(
   filename = "figures/Marker_Heatmap/Marker_Heatmap.png",
   plot = heatmap_plot,
-  width = 12,
-  height = 8,
+  width = 14,
+  height = 12,
   dpi = 300
 )
 
