@@ -1,0 +1,19 @@
+# Raw datasets
+data/raw/
+data/GSE176078/
+
+# R temporary files
+.Rhistory
+.RData
+.Rproj.user/
+
+# Large output files
+*.rds
+*.RData
+
+# System files
+.Rproj.user
+Thumbs.db
+
+# Python cache
+__pycache__
