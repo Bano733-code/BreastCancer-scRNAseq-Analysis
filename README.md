@@ -1,4 +1,4 @@
-# 🧬 Breast Cancer Single-Cell RNA-seq Analysis using Seurat
+# 🧬 Single-Cell RNA-seq Analysis of Breast Cancer Tumor Microenvironment
 
 <div align="center">
 
@@ -13,8 +13,6 @@
 </div>
 
 ---
-
-# 🧬 Single-Cell RNA-seq Analysis of Breast Cancer Tumor Microenvironment
 
 ## Overview
 
@@ -68,7 +66,7 @@ Cell Type Annotation (SingleR)
         ↓
 Differential Expression Analysis
         ↓
-GO & KEGG Pathway Enrichment
+GO Enrichment
         ↓
 Reactome Pathway Analysis
         ↓
@@ -324,36 +322,6 @@ source("scripts/15_TME_Analysis.R")
 ```
 
 All results and figures will be generated automatically.
-
----
-
-# Future Improvements
-
-* Cell-cell communication analysis using CellChat
-* Trajectory inference using Monocle3
-* RNA velocity analysis
-* Copy number variation analysis
-* Spatial transcriptomics integration
-* Machine learning-based cell state prediction
-* Multi-omics integration
-
----
-
-# Author
-
-**Bano Rani**
-
-BS Bioinformatics
-
-University of Agriculture Faisalabad
-
-Research Interests:
-
-* Single-cell Genomics
-* Cancer Bioinformatics
-* Machine Learning
-* AI-driven Precision Medicine
-* Computational Biology
 
 ---
 
