@@ -1,7 +1,3 @@
-<p align="center">
-<img src="figures/banner.png" width="100%">
-</p>
-
 # 🧬 Breast Cancer Single-Cell RNA-seq Analysis using Seurat
 
 <div align="center">
@@ -18,212 +14,88 @@
 
 ---
 
-# 📖 Overview
+# 🧬 Single-Cell RNA-seq Analysis of Breast Cancer Tumor Microenvironment
 
-This repository presents a complete **single-cell RNA sequencing (scRNA-seq)** analysis workflow for breast cancer using the **GSE176078** dataset.
+## Overview
 
-The project performs end-to-end analysis beginning with raw gene expression matrices and ending with biological interpretation through:
+This project performs a comprehensive single-cell RNA sequencing (scRNA-seq) analysis to characterize cellular heterogeneity and the tumor microenvironment in breast cancer.
 
-- Quality Control
-- Normalization
-- Dimensionality Reduction
-- Clustering
-- Cell Type Annotation
-- Differential Expression Analysis
-- Functional Enrichment
-- Tumor Microenvironment Analysis
-- Immune Landscape Characterization
-
-The workflow follows current best practices commonly used in computational biology and cancer genomics research.
+The workflow integrates quality control, dimensionality reduction, unsupervised clustering, cell type annotation, differential expression analysis, and functional pathway analysis to identify biologically meaningful cell populations and molecular signatures.
 
 ---
 
-# 🎯 Objectives
+# Dataset
 
-The primary objectives of this project are:
+**GEO Accession:** GSE176078
 
-- Analyze breast cancer single-cell transcriptomic data.
-- Identify distinct cellular populations.
-- Annotate cell types using automated reference-based methods.
-- Discover cluster-specific marker genes.
-- Characterize the tumor microenvironment.
-- Investigate biological pathways enriched in different cell populations.
-- Produce publication-quality visualizations.
+**Organism:** Homo sapiens
 
----
+**Disease:** Breast Cancer
 
-# 🧬 Dataset
+**Technology:** Single-cell RNA Sequencing
 
-**Dataset**
+Dataset contains:
 
-GSE176078
+* Gene expression count matrix
+* Cell barcode information
+* Gene annotation
+* Cell metadata
 
-**Species**
-
-Homo sapiens
-
-**Disease**
-
-Breast Cancer
-
-**Platform**
-
-Single-cell RNA Sequencing
-
-**Input Files**
-
-- matrix.mtx
-- genes.tsv
-- barcodes.tsv
-- metadata.csv
+Analysis was performed using R, Seurat, SingleR, and Bioconductor packages.
 
 ---
 
-# 🔬 Analysis Workflow
+# Workflow
 
 ```
-Raw Expression Matrix
-        │
-        ▼
-Quality Control
-        │
-        ▼
-Filtering
-        │
-        ▼
+Raw scRNA-seq Data
+        ↓
+Quality Control & Filtering
+        ↓
 Normalization
-        │
-        ▼
-Highly Variable Genes
-        │
-        ▼
-Scaling
-        │
-        ▼
-Principal Component Analysis
-        │
-        ▼
-Elbow Plot
-        │
-        ▼
-UMAP
-        │
-        ▼
-Clustering
-        │
-        ▼
-Marker Gene Detection
-        │
-        ▼
-SingleR Cell Annotation
-        │
-        ▼
-Differential Expression
-        │
-        ▼
-GO Enrichment
-        │
-        ▼
-KEGG Pathway Analysis
-        │
-        ▼
-Reactome Analysis
-        │
-        ▼
-Tumor Microenvironment Analysis
-        │
-        ▼
-Immune Landscape
+        ↓
+Highly Variable Gene Identification
+        ↓
+PCA Dimensionality Reduction
+        ↓
+UMAP Visualization
+        ↓
+Cell Clustering
+        ↓
+Marker Gene Identification
+        ↓
+Cell Type Annotation (SingleR)
+        ↓
+Differential Expression Analysis
+        ↓
+GO & KEGG Pathway Enrichment
+        ↓
+Reactome Pathway Analysis
+        ↓
+Tumor Microenvironment Characterization
+        ↓
+Immune Landscape Analysis
 ```
 
 ---
 
-# 📂 Project Structure
+# Methods
+
+## Quality Control and Preprocessing
+
+Cells were filtered based on:
 
 ```
-BreastCancer-scRNAseq/
-
-│
-├── data/
-│   ├── raw/
-│   ├── processed/
-│
-├── scripts/
-│   ├── 01_Load_Data.R
-│   ├── 02_Quality_Control.R
-│   ├── 03_Filtering.R
-│   ├── 04_Normalization.R
-│   ├── 05_PCA.R
-│   ├── 06_Clustering_UMAP.R
-│   ├── 07_Marker_Genes.R
-│   ├── 08_Cell_Annotation.R
-│   ├── 09_Differential_Expression.R
-│   ├── 10_GO_KEGG.R
-│   ├── 11_Reactome_Pathway.R
-│   ├── 12_Marker_Heatmap.R
-│   ├── 13_Marker_DotPlot.R
-│   ├── 14_Cell_Composition_and_Immune_Landscape.R
-│   ├── 15_Tumor_Microenvironment_Analysis.R
-│
-├── figures/
-│
-├── results/
-│
-├── README.md
-├── requirements.txt
-├── LICENSE
-└── .gitignore
+nFeature_RNA > 300
+nFeature_RNA < 7000
+Mitochondrial percentage < 15%
 ```
 
----
+Quality metrics evaluated:
 
-# 📊 Analysis Performed
-
-| Analysis | Status |
-|-----------|---------|
-| Data Loading | ✅ |
-| Quality Control | ✅ |
-| Cell Filtering | ✅ |
-| Normalization | ✅ |
-| Variable Gene Selection | ✅ |
-| Scaling | ✅ |
-| PCA | ✅ |
-| UMAP | ✅ |
-| Clustering | ✅ |
-| Marker Gene Detection | ✅ |
-| Cell Annotation (SingleR) | ✅ |
-| Differential Expression | ✅ |
-| GO Enrichment | ✅ |
-| KEGG Analysis | ✅ |
-| Reactome Pathway Analysis | ✅ |
-| Marker Heatmap | ✅ |
-| Marker DotPlot | ✅ |
-| Cell Composition | ✅ |
-| Immune Landscape | ✅ |
-| Tumor Microenvironment Analysis | ✅ |
-
----
-
-# 📈 Results
-
-This analysis successfully identified multiple biologically meaningful cell populations, including:
-
-- T Cells
-- B Cells
-- NK Cells
-- Macrophages
-- Monocytes
-- Endothelial Cells
-- Fibroblasts
-- Epithelial (Tumor) Cells
-
-Cluster-specific marker genes were identified and subsequently analyzed using GO, KEGG, and Reactome pathway enrichment to reveal functional characteristics of each cell population.
-
----
-
-# 🖼 Example Figures
-
-## Quality Control
+* Number of detected genes per cell
+* Total RNA counts
+* Mitochondrial gene expression
 
 <p align="center">
 <img src="figures/QC/QC_Violin.png" width="700">
@@ -231,75 +103,205 @@ Cluster-specific marker genes were identified and subsequently analyzed using GO
 
 ---
 
-## PCA
+# Dimensionality Reduction and Clustering
+
+## Principal Component Analysis (PCA)
+
+Highly variable genes were identified followed by PCA-based dimensionality reduction.
+
+The optimal number of principal components was selected using an elbow plot.
 
 <p align="center">
-<img src="figures/PCA/PCA.png" width="700">
+<img src="figures/PCA/Elbow_plot.png" width="700">
 </p>
 
----
 
-## UMAP
+## UMAP Visualization
+
+Unsupervised clustering identified distinct cellular populations within the breast cancer microenvironment.
 
 <p align="center">
 <img src="figures/UMAP/UMAP.png" width="700">
 </p>
 
+
 ---
 
-## Marker Heatmap
+# Cell Type Annotation
+
+Cell identities were assigned using:
+
+**SingleR reference-based annotation**
+
+Identified cell populations included:
+
+| Cell Population | Description |
+|----------------|-------------|
+| T Cells | Adaptive immune population |
+| NK Cells | Cytotoxic lymphocytes |
+| B Cells | Antibody-producing immune cells |
+| Macrophages | Tumor-associated immune cells |
+| Monocytes | Myeloid immune population |
+| Endothelial Cells | Tumor vasculature |
+| Fibroblasts | Stromal population |
+| Epithelial Cells | Tumor-associated cells |
+
+
+---
+
+# Marker Gene Identification
+
+Cluster-specific marker genes were identified using differential expression analysis.
+
+Example markers:
+
+| Cell Type | Representative Markers |
+|-----------|-----------------------|
+| T Cells | CD3D, CD3E, CD2, CCL5 |
+| NK Cells | NKG7, GNLY |
+| B Cells | CD79A, MS4A1 |
+| Macrophages | LST1, TYROBP |
+| Endothelial Cells | VWF, EMCN, PLVAP |
+| Fibroblasts | COL1A1, COL3A1 |
 
 <p align="center">
-<img src="figures/Markers/Marker_Heatmap.png" width="700">
+<img src="figures/Marker_HeatMap/Marker_Heatmap.png" width="700">
 </p>
+
 
 ---
 
-## GO Enrichment
+# Differential Expression Analysis
+
+Cluster-specific differential expression analysis was performed to identify genes enriched in each cellular population.
+
+Criteria:
+
+```
+Adjusted P-value < 0.05
+Positive log2 Fold Change
+```
+
+Results:
+
+| Analysis | Genes Identified |
+|----------|-----------------:|
+| Differentially Expressed Genes | 21,456 |
+
+
+---
+
+# Functional Enrichment Analysis
+
+## GO Biological Process Analysis
+
+Gene Ontology enrichment revealed pathways associated with:
+
+* Immune activation
+* Extracellular matrix organization
+* Cell adhesion
+* Angiogenesis
+* Tumor progression
+
 
 <p align="center">
-<img src="figures/GO/GO_BP.png" width="700">
+<img src="figures/GO_KEGG/GO_Dotplot.png" width="700">
 </p>
+
 
 ---
 
-## KEGG Pathway Analysis
+# Tumor Microenvironment Analysis
 
-<p align="center">
-<img src="figures/KEGG/KEGG.png" width="700">
-</p>
+Cells were grouped into major biological compartments:
 
----
+```
+Tumor Cells
+      |
+      |
+Immune Cells
+      |
+      |
+Stromal Cells
+```
 
-## Tumor Microenvironment
+The immune landscape revealed the contribution of:
+
+* T cells
+* NK cells
+* Macrophages
+* B cells
+* Monocytes
 
 <p align="center">
 <img src="figures/TME/TME_UMAP.png" width="700">
 </p>
 
----
-
-# 💻 Technologies Used
-
-- R
-- Seurat
-- SingleR
-- celldex
-- clusterProfiler
-- enrichplot
-- ReactomePA
-- ggplot2
-- dplyr
-- patchwork
 
 ---
 
-# 🚀 Installation
+# Cell Composition Analysis
+
+Major cellular compartments were quantified to understand tumor ecosystem composition.
+
+Example:
+
+| Compartment | Cell Types |
+|-------------|------------|
+| Immune | T cells, NK cells, B cells, Macrophages |
+| Stromal | Fibroblasts, Endothelial cells |
+| Tumor | Epithelial cells |
+
+
+<p align="center">
+<img src="figures/Immune_Landscape/Major_Cell_Composition.png" width="700">
+</p>
+
+
+---
+
+# Repository Structure
+
+```
+BreastCancer-scRNAseq/
+
+├── data/
+│
+├── scripts/
+│   ├── 01_Load_Data.R
+│   ├── 02_QC.R
+│   ├── 03_Filtering.R
+│   ├── 04_Normalization.R
+│   ├── 05_PCA.R
+│   ├── 06_Clustering_UMAP.R
+│   ├── 07_Marker_Genes.R
+│   ├── 08_Cell_Annotation.R
+│   ├── 09_DEG_Analysis.R
+│   ├── 10_GO_KEGG.R
+│   ├── 11_Reactome_Pathway.R
+│   ├── 12_Marker_Heatmap.R
+│   ├── 13_Marker_DotPlot.R
+│   ├── 14_Cell_Composition.R
+│   └── 15_TME_Analysis.R
+│
+├── figures/
+│
+├── results/
+│
+├── README.md
+└── .gitignore
+```
+
+---
+
+# Running the Pipeline
+
+Install required packages:
 
 ```r
 install.packages("Seurat")
-install.packages("patchwork")
 install.packages("tidyverse")
+install.packages("patchwork")
 
 BiocManager::install("SingleR")
 BiocManager::install("celldex")
@@ -307,71 +309,51 @@ BiocManager::install("clusterProfiler")
 BiocManager::install("ReactomePA")
 ```
 
+Run scripts sequentially:
+
+```r
+source("scripts/01_Load_Data.R")
+
+source("scripts/02_QC.R")
+
+source("scripts/03_Filtering.R")
+
+...
+
+source("scripts/15_TME_Analysis.R")
+```
+
+All results and figures will be generated automatically.
+
 ---
 
-# ▶️ Running the Pipeline
+# Future Improvements
 
-Execute scripts sequentially.
+* Cell-cell communication analysis using CellChat
+* Trajectory inference using Monocle3
+* RNA velocity analysis
+* Copy number variation analysis
+* Spatial transcriptomics integration
+* Machine learning-based cell state prediction
+* Multi-omics integration
 
-```
-01_Load_Data.R
+---
 
-↓
+# Author
 
-02_Quality_Control.R
+**Bano Rani**
 
-↓
+BS Bioinformatics
 
-03_Filtering.R
+University of Agriculture Faisalabad
 
-↓
+Research Interests:
 
-04_Normalization.R
-
-↓
-
-05_PCA.R
-
-↓
-
-06_Clustering_UMAP.R
-
-↓
-
-07_Marker_Genes.R
-
-↓
-
-08_Cell_Annotation.R
-
-↓
-
-09_Differential_Expression.R
-
-↓
-
-10_GO_KEGG.R
-
-↓
-
-11_Reactome_Pathway.R
-
-↓
-
-12_Marker_Heatmap.R
-
-↓
-
-13_Marker_DotPlot.R
-
-↓
-
-14_Cell_Composition_and_Immune_Landscape.R
-
-↓
-
-15_Tumor_Microenvironment_Analysis.R
-```
+* Single-cell Genomics
+* Cancer Bioinformatics
+* Machine Learning
+* AI-driven Precision Medicine
+* Computational Biology
 
 ---
 
