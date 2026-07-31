@@ -66,7 +66,7 @@ Cell Type Annotation (SingleR)
         ↓
 Differential Expression Analysis
         ↓
-GO Enrichment
+GO Biologocal Process Enrichment
         ↓
 Reactome Pathway Analysis
         ↓
@@ -209,6 +209,27 @@ Gene Ontology enrichment revealed pathways associated with:
 
 ---
 
+# Reactome Pathway Analysis
+
+Reactome pathway enrichment analysis was performed to identify biological processes and molecular mechanisms associated with differentially expressed genes.
+
+Enriched pathways revealed involvement of:
+
+* Immune system activation
+* Antigen processing and presentation
+* Cytokine signaling
+* Extracellular matrix organization
+* Cell adhesion
+* Angiogenesis
+* Cellular metabolism
+* Cancer-associated signaling pathways
+
+
+<p align="center">
+<img src="figures/Reactome/Reactome_Dotplot.png" width="700">
+</p>
+
+---
 # Tumor Microenvironment Analysis
 
 Cells were grouped into major biological compartments:
