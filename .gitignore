@@ -10,10 +10,12 @@ data/GSE176078/
 # Large output files
 *.rds
 *.RData
-
+ 
 # System files
 .Rproj.user
 Thumbs.db
 
 # Python cache
 __pycache__
+
+Single_cell_RNAseq.Rproj
