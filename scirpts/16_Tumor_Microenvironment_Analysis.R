@@ -158,7 +158,8 @@ ggsave(
   pie,
   width=7,
   height=7,
-  dpi=300
+  dpi=300,
+  bg="white"
 )
 ###############################################################
 ## Immune Fraction

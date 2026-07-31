@@ -216,6 +216,7 @@ ggsave(
   height=7,
   
   dpi=300,
+  
   bg="white"
   
 )

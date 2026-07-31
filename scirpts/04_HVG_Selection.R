@@ -39,7 +39,8 @@ ggsave(
   plot = hvg_plot,
   width = 8,
   height = 6,
-  dpi = 300
+  dpi = 300,
+  bg="white"
 )
 
 
