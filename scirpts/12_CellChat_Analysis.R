@@ -122,7 +122,8 @@ ggsave(
   pie_plot,
   width=8,
   height=8,
-  dpi=300
+  dpi=300,
+  bg="white"
 )
 ###############################################################
 # Percentage Plot
