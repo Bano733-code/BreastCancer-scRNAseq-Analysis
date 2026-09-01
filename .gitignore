@@ -1,21 +1,72 @@
-# Raw datasets
-data/raw/
-data/GSE176078/
+# ================================
+# Raw / downloaded datasets
+# ================================
+data/
 
-# R temporary files
+# ================================
+# R temporary / project files
+# ================================
 .Rhistory
 .RData
+.Ruserdata
 .Rproj.user/
 
-# Large output files
+# ================================
+# Large analysis objects
+# ================================
 *.rds
 *.RData
- 
+*.h5
+*.h5ad
+*.mtx
+*.mtx.gz
+*.tar.gz
+
+# ================================
 # System files
-.Rproj.user
+# ================================
+.DS_Store
 Thumbs.db
 
+# ================================
 # Python cache
-__pycache__
+# ================================
+__pycache__/
+*.pyc
 
+# ================================
+# Secrets / environment files
+# ================================
+.env
+.env.*
+
+# ================================
+# RStudio project file
+# ================================
 Single_cell_RNAseq.Rproj
+# R temporary/session files
+.RDataTmp*
+.Rhistory
+.RData
+
+# Downloaded / external tools
+CellChat-main/
+CopyOfdata/
+backup_CopyKAT_old/
+
+# Raw / auxiliary single-cell data
+barcodes.tsv
+genes.tsv
+cell_annotations.txt
+epithelial_target_cells.txt
+infercnv_reference_cells.txt
+gene_order.txt
+gencode.v49.annotation.gtf.gz
+
+# RStudio
+.Rproj.user/
+Single_cell_RNAseq.Rproj
+
+# Large R objects
+*.rds
+*.RData
