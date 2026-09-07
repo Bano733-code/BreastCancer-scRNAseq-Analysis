@@ -81,7 +81,6 @@ Mitochondrial percentage < 15%
 <p align="center">
 <img src="figures/QC/QC_Violin.png" width="700"><br>
 <img src="figures/QC/QC_Scatter.png" width="700"><br>
-<img src="figures/QC/HVG_selection.png" width="700">
 </p>
 
 ---
@@ -277,30 +276,6 @@ Kaplan-Meier and Cox proportional hazards regression (unadjusted and adjusted fo
 BreastCancer-scRNAseq-Analysis/
 │
 ├── figures/
-│   ├── QC/                      QC_Violin.png, QC_Scatter.png, HVG_selection.png
-│   ├── PCA/
-│   ├── UMAP/                    UMAP.png
-│   ├── Marker_Heatmap/
-│   ├── Marker_DotPlot/          Marker_DotPlot.png
-│   ├── GO_KEGG/                 GO_Barplot.png, GO_Dotplot.png, T_cells_GO_dotplot.pdf
-│   ├── Reactome/
-│   ├── Cell_Composition/        Cell_Composition_Barplot/Percentage/PieChart.png
-│   ├── Immune_Landscape/
-│   ├── TME/                     TME_UMAP.png, TME_Barplot.png, TME_PieChart.png,
-│   │                            Immune_Landscape.png, Figure5D_MK_Signaling_Network.png
-│   ├── Malignant/                Epithelial_Cells_Original_UMAP.png,
-│   │                            Epithelial_Subclusters_UMAP.png,
-│   │                            Epithelial_PCA_Elbow.png,
-│   │                            Epithelial_Variable_Features.png,
-│   │                            Epithelial_Cells_By_Sample.png,
-│   │                            Figure3B_CNV_Score_Distribution.png,
-│   │                            Figure3C_CNV_High_vs_Low.png,
-│   │                            Figure4B_Malignant_State_ModuleScore_Heatmap.png
-│   ├── Signature/                Figure6A_60Gene_Signature_Construction_page-0001.jpg,
-│   │                            Figure6B_METABRIC_Signature_Score_Distribution.png,
-│   │                            Figure6D_Publication_Cox_Plot_page-0001.jpg
-│   └── figures_scripts/          scripts used to generate the above figures
-│
 ├── results/
 │   ├── Cell_Composition/
 │   ├── Differential_Expression/
@@ -310,38 +285,11 @@ BreastCancer-scRNAseq-Analysis/
 │   ├── Malignant_Subtyping/
 │   ├── Marker_Genes/
 │   ├── Reactome/
-│   └── TME/                      cnv_scores_per_cell.csv,
-│                                malignant_state_scores_per_cell.csv,
-│                                malignant_state_kruskal_BHadjusted.csv,
-│                                malignant_state_dunn_posthoc.csv,
-│                                malignant_state_subtype_association.csv,
-│                                sample_level_state_proportions.csv,
-│                                malignant_state_by_subtype_stackedbar.png,
-│                                malignant_state_by_subtype_persample_boxplot.png,
-│                                cellchat_overall_heatmap.pdf,
-│                                cellchat_signaling_role_heatmap.pdf,
-│                                cellchat_bubble_TME_to_malignant.pdf,
-│                                cellchat_candidate_pathways_bubble.pdf,
-│                                cellchat_candidate_pathways_table.csv,
-│                                cellchat_subtype_interaction_strength.pdf,
-│                                cellchat_subtype_bubble_comparison.pdf,
-│                                cellchat_subtype_pathway_rank_FULL.pdf,
-│                                cellchat_subtype_pathway_rank_candidates_only.pdf,
-│                                cellchat_subtype_pathway_rank_table.csv,
-│                                gene_signature_state_based.csv,
-│                                gene_signature_pathway_based.csv,
-│                                gene_signature_FINAL.csv,
-│                                bulk_signature_scores.csv,
-│                                survival_KM_signature.pdf,
-│                                survival_cox_summary.csv,
-│                                Figure6D_Cox_Forest_Results.csv,
-│                                Immune_Cell_Fraction.csv,
-│                                TME_Composition.csv
+│   └── TME/  
 │
 ├── scripts/
 ├── .gitignore
 ├── README.md
-├── Single_cell_RNAseq.Rproj
 └── main.R
 ```
 
