@@ -39,7 +39,8 @@ CellChat (full object + subtype-stratified comparison)
 Gene Signature → METABRIC Validation → Survival Analysis
 ```
 
-**Methods summary:**
+## Methods summary
+
 - **QC & clustering:** Standard Seurat workflow; 31 clusters annotated via SingleR.
 - **Malignant classification:** A chromosome-arm expression-deviation proxy (referenced against immune/stromal cells) classifies epithelial cells as CNV-high (malignant candidate) or CNV-low, used in place of inferCNV/CopyKAT for computational feasibility.
 - **Malignant states:** Five states (basal-like, luminal progenitor-like, mature luminal-like, EMT/mesenchymal, cycling/proliferative) annotated via `AddModuleScore`, compared across clinical subtypes with patient-level Kruskal-Wallis testing.
