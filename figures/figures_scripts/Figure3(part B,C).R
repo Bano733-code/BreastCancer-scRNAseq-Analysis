@@ -1,74 +1,140 @@
 # ============================================================
-# FIGURE 3B — CNV SCORE DISTRIBUTION
+# FIGURE 3B — PATIENT-LEVEL CNV-HIGH PROPORTION
 # ============================================================
 
-library(ggplot2)
+library(readr)
 library(dplyr)
+library(ggplot2)
 
 # ------------------------------------------------------------
 # 1. Load CNV results
 # ------------------------------------------------------------
 
-cnv <- read.csv("results/TME/cnv_scores_per_cell.csv",
-                stringsAsFactors = FALSE)
-
-# Check
-head(cnv)
-table(cnv$cnv_call)
-
-# ------------------------------------------------------------
-# 2. Make clean CNV category
-# ------------------------------------------------------------
-
-cnv$CNV_group <- ifelse(
-  cnv$cnv_call == "CNV-high (malignant candidate)",
-  "CNV-high",
-  "CNV-low"
+cnv <- read_csv(
+  "results/TME/cnv_scores_per_cell.csv",
+  show_col_types = FALSE
 )
 
 # ------------------------------------------------------------
-# 3. Plot distribution
+# 2. Create CNV-high indicator
 # ------------------------------------------------------------
 
-p3B <- ggplot(cnv, aes(x = cnv_score)) +
-  
-  geom_histogram(
-    bins = 80,
-    fill = "grey75",
-    color = "white"
+cnv <- cnv %>%
+  mutate(
+    CNV_high = ifelse(
+      cnv_call == "CNV-high (malignant candidate)",
+      1,
+      0
+    )
+  )
+
+# ------------------------------------------------------------
+# 3. Calculate CNV-high proportion for every sample
+# ------------------------------------------------------------
+
+sample_cnv <- cnv %>%
+  group_by(sample) %>%
+  summarise(
+    total_epithelial = n(),
+    CNV_high_cells = sum(CNV_high),
+    CNV_high_percent =
+      100 * CNV_high_cells / total_epithelial,
+    .groups = "drop"
+  ) %>%
+  arrange(desc(CNV_high_percent))
+
+# ------------------------------------------------------------
+# 4. Print results
+# ------------------------------------------------------------
+
+cat("\nPatient-level CNV-high proportions:\n")
+print(sample_cnv)
+
+cat(
+  "\nMinimum CNV-high proportion:",
+  round(min(sample_cnv$CNV_high_percent), 2),
+  "%\n"
+)
+
+cat(
+  "Maximum CNV-high proportion:",
+  round(max(sample_cnv$CNV_high_percent), 2),
+  "%\n"
+)
+
+# ------------------------------------------------------------
+# 5. Make sample order follow percentage
+# ------------------------------------------------------------
+
+sample_cnv$sample <- factor(
+  sample_cnv$sample,
+  levels = sample_cnv$sample
+)
+
+# ------------------------------------------------------------
+# 6. Publication-style horizontal bar plot
+# ------------------------------------------------------------
+
+p3B <- ggplot(
+  sample_cnv,
+  aes(
+    x = sample,
+    y = CNV_high_percent
+  )
+) +
+
+  geom_col(
+    width = 0.7
   ) +
-  
-  geom_density(
-    aes(y = after_stat(count)),
-    linewidth = 0.8
+
+  coord_flip() +
+
+  geom_text(
+    aes(
+      label = paste0(
+        round(CNV_high_percent, 1),
+        "%"
+      )
+    ),
+    hjust = -0.15,
+    size = 3
   ) +
-  
-  geom_vline(
-    xintercept = 0.025,
-    linetype = "dashed",
-    linewidth = 0.9
+
+  scale_y_continuous(
+    limits = c(
+      0,
+      max(sample_cnv$CNV_high_percent) * 1.12
+    ),
+    expand = c(0, 0)
   ) +
-  
-  annotate(
-    "text",
-    x = 0.025,
-    y = Inf,
-    label = "95th percentile threshold = 0.025",
-    vjust = 1.5,
-    hjust = -0.05,
-    size = 4
-  ) +
-  
+
   labs(
-    title = "Distribution of chromosome-arm CNV scores",
-    x = "CNV score",
-    y = "Number of epithelial cells"
+    title = "CNV-high epithelial cells across patient samples",
+    x = "Patient sample",
+    y = "CNV-high epithelial cells (%)"
   ) +
-  
-  theme_classic(base_size = 13)
+
+  theme_classic(
+    base_size = 12
+  ) +
+
+  theme(
+    plot.title = element_text(
+      face = "bold",
+      size = 13
+    ),
+    axis.text.y = element_text(
+      size = 8
+    ),
+    axis.title = element_text(
+      face = "bold"
+    )
+  )
+
+print(p3B)
 
 # ------------------------------------------------------------
-# 4. Save
+# 7. Save high-resolution PNG
 # ------------------------------------------------------------
 
 dir.create(
@@ -78,11 +144,26 @@ dir.create(
 )
 
 ggsave(
-  "figures/Malignant/Figure3B_CNV_Score_Distribution.png",
+  "figures/Malignant/Figure3B_CNV_High_Proportion_By_Sample.png",
   p3B,
   width = 7,
-  height = 5.5,
-  dpi = 600
+  height = 8,
+  dpi = 600,
+  bg = "white"
+)
+
+# ------------------------------------------------------------
+# 8. Save the summary table
+# ------------------------------------------------------------
+
+write.csv(
+  sample_cnv,
+  "results/TME/CNV_High_Proportion_By_Sample.csv",
+  row.names = FALSE
+)
+
+cat(
+  "\nFigure 3B generated successfully.\n"
 )
 # ============================================================
 # FIGURE 3C — CNV-HIGH VS CNV-LOW CLASSIFICATION
