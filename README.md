@@ -112,6 +112,7 @@ Scripts in `scripts/` are run in order, from QC through survival analysis. CNV s
 ## Author
 
 **Bano Rani** — BS Bioinformatics, Department of Computer Science, University of Agriculture Faisalabad
+
 Supervisor: Dr. Sumaira Nishat
 
 ⭐ If this project is useful, consider starring the repository.
