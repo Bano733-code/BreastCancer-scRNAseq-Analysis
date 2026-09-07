@@ -1,8 +1,16 @@
 # 🧬 Single-Cell RNA-seq Analysis of Breast Cancer Tumor Microenvironment: From Cellular Architecture to a Validated Prognostic Signature
 
-![R](https://img.shields.io/badge/R-4.6-blue) ![Seurat](https://img.shields.io/badge/Seurat-5.x-orange) ![CellChat](https://img.shields.io/badge/CellChat-2.x-green) ![License](https://img.shields.io/badge/License-MIT-lightgrey) ![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+<div align="center">
 
-A comprehensive single-cell RNA sequencing analysis pipeline for breast cancer, extending beyond standard cell-type mapping to computationally distinguish malignant from normal epithelial cells, characterize malignant cell-state heterogeneity across molecular subtypes, infer cell-cell communication networks, and validate a derived gene signature as an independent prognostic biomarker in bulk clinical cohorts.
+![R](https://img.shields.io/badge/R-4.6-276DC3?style=for-the-badge&logo=r)
+![Seurat](https://img.shields.io/badge/Seurat-v5-blue?style=for-the-badge)
+![CellChat](https://img.shields.io/badge/CellChat-v2-green?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)
+![Status](https://img.shields.io/badge/Project-Completed-success?style=for-the-badge)
+
+*A comprehensive single-cell RNA sequencing analysis pipeline for breast cancer, extending beyond standard cell-type mapping to malignant-cell classification, subtype-specific heterogeneity, cell-cell communication inference, and a validated prognostic gene signature.*
+
+</div>
 
 ---
 
@@ -10,12 +18,10 @@ A comprehensive single-cell RNA sequencing analysis pipeline for breast cancer, 
 
 This project performs an end-to-end scRNA-seq analysis of the breast cancer tumor microenvironment (TME), organized into four stages:
 
-1. **Foundational pipeline** — QC, normalization, clustering, cell-type annotation, differential expression, and functional enrichment (31 clusters, immune/stromal/epithelial compartments).
-2. **Phase 1 — Malignant Cell Subtyping** — CNV-based classification of malignant vs. normal epithelial cells, followed by malignant-state characterization and molecular-subtype association testing.
-3. **Phase 2 — Cell-Cell Communication** — CellChat-based ligand-receptor signaling inference across the full annotated object, with subtype-stratified comparison.
-4. **Phase 3 — Bulk Validation** — Derivation of a gene signature and its prognostic validation in an independent bulk RNA-seq cohort (METABRIC) via Kaplan-Meier and Cox regression survival analysis.
-
-This design moves the project from *descriptive cellular mapping* (identifying that immune/stromal/epithelial populations exist) to a *mechanistic and translational result* (subtype-specific malignant heterogeneity, a candidate signaling axis, and a validated prognostic signature).
+1. **Foundational pipeline** — QC, normalization, clustering, cell-type annotation, differential expression, and functional enrichment.
+2. **Malignant cell subtyping** — CNV-based classification of malignant candidate vs. CNV-low epithelial cells, followed by malignant-state characterization and clinical-subtype association testing.
+3. **Cell-cell communication** — CellChat-based ligand-receptor signaling inference across the full annotated object, with subtype-stratified comparison.
+4. **Bulk validation** — Derivation of a gene signature and its prognostic validation in an independent bulk RNA-seq cohort (METABRIC) via Kaplan-Meier and Cox regression survival analysis.
 
 ---
 
@@ -27,7 +33,7 @@ This design moves the project from *descriptive cellular mapping* (identifying t
 - **Technology:** Single-cell RNA Sequencing
 - **Source:** Wu et al., 2021, *Nature Genetics* — "A single-cell and spatially resolved atlas of human breast cancers"
 - **Scale:** 100,064 cells (26 patient samples); 94,195 retained after QC
-- **Clinical metadata:** author-provided molecular subtype per sample (TNBC, HER2+, ER+), used throughout Phase 1 and Phase 2 for subtype-stratified analyses
+- **Clinical metadata:** author-provided clinical subtype per sample (11 ER+, 5 HER2+, 10 TNBC)
 
 ---
 
@@ -49,62 +55,201 @@ Cell Type Annotation (SingleR)
 Differential Expression + GO / Reactome Enrichment
         │
         ▼
-┌─────────────────────────────────────────────┐
-│  PHASE 1 — Malignant Cell Subtyping          │
-│  Epithelial subset → CNV-based malignant/    │
-│  normal classification → malignant states →  │
-│  molecular subtype association                │
-└─────────────────────────────────────────────┘
+Epithelial Subset → CNV-Based Classification → Malignant States
+        │                                            │
+        │                                            ▼
+        │                              Clinical Subtype Association
+        ▼
+Full Annotated Object → CellChat → Subtype-Stratified Comparison
         │
         ▼
-┌─────────────────────────────────────────────┐
-│  PHASE 2 — Cell-Cell Communication            │
-│  CellChat (full object) → dominant pathway    │
-│  identification → subtype-stratified          │
-│  comparison                                    │
-└─────────────────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────────────────────────┐
-│  PHASE 3 — Bulk Validation                    │
-│  Gene signature derivation → METABRIC         │
-│  scoring → Kaplan-Meier + Cox survival        │
-└─────────────────────────────────────────────┘
+Gene Signature Derivation → METABRIC Scoring → Survival Analysis
 ```
 
 ---
 
-## Methods
+## 1. Quality Control and Preprocessing
 
-### 1. Quality Control and Preprocessing
-Cells filtered on: `nFeature_RNA > 300`, `nFeature_RNA < 7000`, mitochondrial percentage `< 15%`. 94,195 of 100,064 cells retained.
+Cells were filtered on:
+```
+nFeature_RNA > 300
+nFeature_RNA < 7000
+Mitochondrial percentage < 15%
+```
+94,195 of 100,064 cells were retained.
 
-### 2. Dimensionality Reduction and Clustering
-Highly variable genes → PCA → UMAP → unsupervised (Louvain) clustering, resolved into 31 clusters.
+<p align="center">
+<img src="figures/QC/QC_Violin.png" width="700"><br>
+<img src="figures/QC/QC_Scatter.png" width="700"><br>
+<img src="figures/QC/HVG_selection.png" width="700">
+</p>
 
-### 3. Cell Type Annotation
-SingleR reference-based annotation identified T cells, NK cells, B cells, macrophages, monocytes, endothelial cells, fibroblasts, and epithelial cells, among others.
+---
 
-### 4. Differential Expression & Functional Enrichment
-Cluster-specific marker genes (21,456 total DEGs; adj. p < 0.05, positive log2FC) were identified. GO Biological Process and Reactome pathway enrichment highlighted immune activation, antigen presentation, cytokine signaling, extracellular matrix organization, angiogenesis, and cancer-associated signaling.
+## 2. Dimensionality Reduction and Clustering
 
-### 5. Phase 1 — Malignant Cell Subtyping
+Highly variable genes were identified, followed by PCA and UMAP-based visualization of unsupervised (Louvain) clustering, resolving 31 clusters.
 
-**5.1 Epithelial subset & CNV-based classification.** Epithelial cells (SingleR call, n = 22,729) were extracted. Due to computational resource constraints, a lightweight chromosome-arm expression-deviation proxy (conceptually related to inferCNV) was implemented in place of inferCNV/CopyKAT: expression was referenced against a stratified sample of 4,743 immune/stromal cells, per-cell CNV scores were computed as the standard deviation of relative expression across chromosome arms, and a data-driven threshold (95th percentile of the reference distribution) classified cells as **CNV-high (malignant candidate)** or **CNV-low**. Result: **10,548 malignant candidate cells**, **12,181 CNV-low (normal) epithelial cells**; per-sample malignant fraction ranged 0–87%, consistent with expected inter-tumor heterogeneity.
+<p align="center">
+<img src="figures/UMAP/UMAP.png" width="700">
+</p>
 
-**5.2 Malignant state characterization.** CNV-high cells were re-clustered independently (30 PCs, resolution 1.0) and annotated into five states via `AddModuleScore` using literature-curated marker sets: **Basal-like** (n=1,093), **Luminal Progenitor-like** (n=1,855), **Mature Luminal-like** (n=4,758), **EMT/Mesenchymal** (n=1,020), **Cycling/Proliferative** (n=1,822).
+---
 
-**5.3 Molecular subtype association.** Malignant state proportions were compared across TNBC/HER2+/ER+ at the patient (sample) level using Kruskal-Wallis tests with Benjamini-Hochberg correction, avoiding pseudoreplication from pooling correlated cells. **All five states showed significant subtype association** (adjusted p < 0.05), robust to exclusion of the largest-contributing sample. ER+ tumors were dominated by Mature Luminal-like cells (92.2%); HER2+ by Luminal Progenitor-like (50.5%); TNBC showed the greatest heterogeneity across all five states.
+## 3. Cell Type Annotation
 
-### 6. Phase 2 — Cell-Cell Communication (CellChat)
+Cell identities were assigned using **SingleR** reference-based annotation:
 
-The full object was re-annotated with malignant-state labels replacing the generic "Epithelial" call. CellChat (human CellChatDB) was run on the full annotated object (111 active pathways detected, including the literature-expected TGF-β, SPP1, CXCL/CCL, and MIF axes) and separately on each molecular subtype (with cell-group harmonization via `liftCellChat` prior to merging/comparison). The unrestricted, full-database subtype comparison identified **midkine (MK) signaling** as the top differentially-active pathway between TNBC and HER2+/ER+ tumors — a data-driven finding rather than an assumed literature candidate.
+| Cell Population | Description |
+|---|---|
+| T Cells | Adaptive immune population |
+| NK Cells | Cytotoxic lymphocytes |
+| B Cells | Antibody-producing immune cells |
+| Macrophages | Tumor-associated immune cells |
+| Monocytes | Myeloid immune population |
+| Endothelial Cells | Tumor vasculature |
+| Fibroblasts | Stromal population |
+| Epithelial Cells | Tumor-associated cells |
 
-### 7. Phase 3 — Bulk Validation & Survival Analysis
+<p align="center">
+<img src="figures/Marker_DotPlot/Marker_DotPlot.png" width="700">
+</p>
 
-A 60-gene signature was derived by combining (a) the top 50 marker genes of the malignant state most strongly associated with subtype (Cycling/Proliferative), and (b) the 10 ligand-receptor genes of the MK signaling pathway. The signature was scored (mean z-score method) in the independent METABRIC bulk cohort (n = 1,980 patients; 55/60 genes present on the microarray platform) and patients stratified by median split. Kaplan-Meier and Cox proportional hazards regression (unadjusted and adjusted for age and molecular subtype) tested prognostic relevance.
+**Representative markers:**
 
-**Result:** High-signature patients showed significantly worse overall survival (log-rank p = 1 × 10⁻⁷; adjusted Cox HR = 1.31, 95% CI 1.12–1.53, p = 8.9 × 10⁻⁴), independent of age and subtype.
+| Cell Type | Markers |
+|---|---|
+| T Cells | CD3D, CD3E, CD2, CCL5 |
+| NK Cells | NKG7, GNLY |
+| B Cells | CD79A, MS4A1 |
+| Macrophages | LST1, TYROBP |
+| Endothelial Cells | VWF, EMCN, PLVAP |
+| Fibroblasts | COL1A1, COL3A1 |
+
+---
+
+## 4. Differential Expression & Functional Enrichment
+
+Cluster-specific DEGs (21,456 total; adjusted p < 0.05, positive log2FC) were identified. GO Biological Process and Reactome pathway enrichment highlighted immune activation, antigen presentation, cytokine signaling, extracellular matrix organization, and angiogenesis.
+
+<p align="center">
+<img src="figures/GO_KEGG/GO_Dotplot.png" width="700"><br>
+<img src="figures/GO_KEGG/GO_Barplot.png" width="700">
+</p>
+
+---
+
+## 5. Tumor Microenvironment Composition
+
+<p align="center">
+<img src="figures/TME/TME_UMAP.png" width="700"><br>
+<img src="figures/TME/Immune_Landscape.png" width="700">
+</p>
+
+| Compartment | Cell Types |
+|---|---|
+| Immune | T cells, NK cells, B cells, Macrophages, Monocytes |
+| Stromal | Fibroblasts, Endothelial cells |
+| Tumor/Epithelial | Epithelial cells (subsequently reclassified — see Section 6) |
+
+<p align="center">
+<img src="figures/Cell_Composition/Cell_Composition_Barplot.png" width="600">
+<img src="figures/Cell_Composition/Cell_Composition_PieChart.png" width="600">
+</p>
+
+---
+
+## 6. Malignant Cell Subtyping
+
+### 6.1 Epithelial re-clustering
+Epithelial cells (n = 22,729) were extracted and re-normalized/re-clustered independently.
+
+<p align="center">
+<img src="figures/Malignant/Epithelial_Cells_Original_UMAP.png" width="600">
+<img src="figures/Malignant/Epithelial_Subclusters_UMAP.png" width="600"><br>
+<img src="figures/Malignant/Epithelial_PCA_Elbow.png" width="500">
+<img src="figures/Malignant/Epithelial_Variable_Features.png" width="500">
+</p>
+
+### 6.2 CNV-based malignant classification
+Due to computational constraints, a lightweight chromosome-arm expression-deviation proxy (conceptually related to inferCNV) was used in place of inferCNV/CopyKAT. Expression was referenced against a stratified sample of 4,743 immune/stromal cells; a data-driven threshold (95th percentile of the reference distribution) classified epithelial cells as **CNV-high (malignant candidate)** or **CNV-low**.
+
+**Result:** 10,548 malignant candidate cells (46.4%); 12,181 CNV-low cells. Per-sample malignant fraction ranged 0–87%.
+
+<p align="center">
+<img src="figures/Malignant/Figure3B_CNV_Score_Distribution.png" width="600">
+<img src="figures/Malignant/Figure3C_CNV_High_vs_Low.png" width="600"><br>
+<img src="figures/Malignant/Epithelial_Cells_By_Sample.png" width="700">
+</p>
+
+### 6.3 Malignant state characterization
+CNV-high cells were re-clustered and annotated into five states via `AddModuleScore`:
+
+| State | n cells | Representative markers |
+|---|---|---|
+| Basal-like | 1,093 | KRT5, KRT14, TP63 |
+| Luminal Progenitor-like | 1,855 | KIT, ELF5, ALDH1A3 |
+| Mature Luminal-like | 4,758 | ESR1, FOXA1, GATA3 |
+| EMT/Mesenchymal | 1,020 | VIM, ZEB1, FN1 |
+| Cycling/Proliferative | 1,822 | MKI67, TOP2A, CDK1 |
+
+<p align="center">
+<img src="figures/Malignant/Figure4B_Malignant_State_ModuleScore_Heatmap.png" width="700">
+</p>
+
+### 6.4 Clinical subtype association
+Malignant state proportions were compared across TNBC/HER2+/ER+ using patient-level Kruskal-Wallis testing with Benjamini-Hochberg correction (primary evidence, to avoid pseudoreplication from pooling correlated cells).
+
+**All five states showed significant subtype association** (adjusted p = 0.022–0.048). ER+ tumors were dominated by Mature Luminal-like cells (92.2%); HER2+ by Luminal Progenitor-like (50.5%); TNBC displayed the broadest distribution across all five states.
+
+<p align="center">
+<img src="results/TME/malignant_state_by_subtype_stackedbar.png" width="600">
+<img src="results/TME/malignant_state_by_subtype_persample_boxplot.png" width="600">
+</p>
+
+---
+
+## 7. Cell-Cell Communication (CellChat)
+
+The full object was re-annotated with malignant-state labels replacing the generic epithelial call. CellChat (human CellChatDB) was run on the full annotated object and separately per clinical subtype (with `liftCellChat` harmonization prior to merging).
+
+**111 active signaling pathways** were detected, including the literature-expected TGF-β, SPP1, CXCL/CCL, and MIF axes. An unrestricted, full-database subtype comparison identified **midkine (MK) signaling** as the top subtype-differential pathway between TNBC and HER2+/ER+ tumors — a data-driven finding, not an assumed candidate.
+
+<p align="center">
+<img src="figures/TME/Figure5D_MK_Signaling_Network.png" width="700">
+</p>
+
+*Additional CellChat outputs (bubble plots, pathway ranking, interaction-strength comparisons) are in `results/TME/` — see `cellchat_subtype_pathway_rank_table.csv` for the full ranked pathway list and `cellchat_candidate_pathways_table.csv` for the five literature-expected pathways across subtypes.*
+
+---
+
+## 8. Gene Signature & Bulk Validation
+
+A 60-gene signature was derived by combining the top 50 marker genes of the malignant state most strongly associated with subtype (Cycling/Proliferative) with the 10 ligand-receptor genes of the MK pathway (MDK, SDC1, SDC2, SDC4, PTPRZ1, LRP1, NCL, ITGA4, ITGA6, ITGB1).
+
+<p align="center">
+<img src="figures/Signature/Figure6A_60Gene_Signature_Construction_page-0001.jpg" width="700">
+</p>
+
+The signature was scored (mean z-score method) in the independent **METABRIC** cohort (n = 1,980; 55/60 genes present on the array platform) and patients stratified by median split.
+
+<p align="center">
+<img src="figures/Signature/Figure6B_METABRIC_Signature_Score_Distribution.png" width="600">
+</p>
+
+---
+
+## 9. Survival Analysis
+
+Kaplan-Meier and Cox proportional hazards regression (unadjusted and adjusted for age and clinical subtype) tested prognostic relevance.
+
+**Result:** High-signature patients showed significantly worse overall survival (log-rank p = 1 × 10⁻⁷; adjusted Cox HR = 1.31, 95% CI 1.12–1.53, p = 8.9 × 10⁻⁴), independent of age and subtype. The continuous score (HR = 1.26, p = 1.9 × 10⁻⁷) confirmed this was not an artifact of the median-split cutpoint.
+
+<p align="center">
+<img src="figures/Signature/Figure6D_Publication_Cox_Plot_page-0001.jpg" width="700">
+</p>
+
+*Full survival outputs (KM curve, Cox summary table) are in `results/TME/survival_KM_signature.pdf` and `results/TME/survival_cox_summary.csv`.*
 
 ---
 
@@ -131,55 +276,78 @@ A 60-gene signature was derived by combining (a) the top 50 marker genes of the 
 ```
 BreastCancer-scRNAseq-Analysis/
 │
-├── data/
-│   ├── GSE176078/                     # raw scRNA-seq data + author metadata
-│   └── METABRIC/                      # bulk validation cohort (cBioPortal)
+├── figures/
+│   ├── QC/                      QC_Violin.png, QC_Scatter.png, HVG_selection.png
+│   ├── PCA/
+│   ├── UMAP/                    UMAP.png
+│   ├── Marker_Heatmap/
+│   ├── Marker_DotPlot/          Marker_DotPlot.png
+│   ├── GO_KEGG/                 GO_Barplot.png, GO_Dotplot.png, T_cells_GO_dotplot.pdf
+│   ├── Reactome/
+│   ├── Cell_Composition/        Cell_Composition_Barplot/Percentage/PieChart.png
+│   ├── Immune_Landscape/
+│   ├── TME/                     TME_UMAP.png, TME_Barplot.png, TME_PieChart.png,
+│   │                            Immune_Landscape.png, Figure5D_MK_Signaling_Network.png
+│   ├── Malignant/                Epithelial_Cells_Original_UMAP.png,
+│   │                            Epithelial_Subclusters_UMAP.png,
+│   │                            Epithelial_PCA_Elbow.png,
+│   │                            Epithelial_Variable_Features.png,
+│   │                            Epithelial_Cells_By_Sample.png,
+│   │                            Figure3B_CNV_Score_Distribution.png,
+│   │                            Figure3C_CNV_High_vs_Low.png,
+│   │                            Figure4B_Malignant_State_ModuleScore_Heatmap.png
+│   ├── Signature/                Figure6A_60Gene_Signature_Construction_page-0001.jpg,
+│   │                            Figure6B_METABRIC_Signature_Score_Distribution.png,
+│   │                            Figure6D_Publication_Cox_Plot_page-0001.jpg
+│   └── figures_scripts/          scripts used to generate the above figures
+│
+├── results/
+│   ├── Cell_Composition/
+│   ├── Differential_Expression/
+│   ├── GO_KEGG/
+│   ├── Immune_Landscape/
+│   ├── Malignant/
+│   ├── Malignant_Subtyping/
+│   ├── Marker_Genes/
+│   ├── Reactome/
+│   └── TME/                      cnv_scores_per_cell.csv,
+│                                malignant_state_scores_per_cell.csv,
+│                                malignant_state_kruskal_BHadjusted.csv,
+│                                malignant_state_dunn_posthoc.csv,
+│                                malignant_state_subtype_association.csv,
+│                                sample_level_state_proportions.csv,
+│                                malignant_state_by_subtype_stackedbar.png,
+│                                malignant_state_by_subtype_persample_boxplot.png,
+│                                cellchat_overall_heatmap.pdf,
+│                                cellchat_signaling_role_heatmap.pdf,
+│                                cellchat_bubble_TME_to_malignant.pdf,
+│                                cellchat_candidate_pathways_bubble.pdf,
+│                                cellchat_candidate_pathways_table.csv,
+│                                cellchat_subtype_interaction_strength.pdf,
+│                                cellchat_subtype_bubble_comparison.pdf,
+│                                cellchat_subtype_pathway_rank_FULL.pdf,
+│                                cellchat_subtype_pathway_rank_candidates_only.pdf,
+│                                cellchat_subtype_pathway_rank_table.csv,
+│                                gene_signature_state_based.csv,
+│                                gene_signature_pathway_based.csv,
+│                                gene_signature_FINAL.csv,
+│                                bulk_signature_scores.csv,
+│                                survival_KM_signature.pdf,
+│                                survival_cox_summary.csv,
+│                                Figure6D_Cox_Forest_Results.csv,
+│                                Immune_Cell_Fraction.csv,
+│                                TME_Composition.csv
 │
 ├── scripts/
-│   ├── 01_Load_Data.R
-│   ├── 02_QC.R
-│   ├── 03_Filtering.R
-│   ├── 04_Normalization.R
-│   ├── 05_PCA.R
-│   ├── 06_Clustering_UMAP.R
-│   ├── 07_Marker_Genes.R
-│   ├── 08_Cell_Annotation.R
-│   ├── 09_DEG_Analysis.R
-│   ├── 10_GO_KEGG.R
-│   ├── 11_Reactome_Pathway.R
-│   ├── 12_Marker_Heatmap.R
-│   ├── 13_Marker_DotPlot.R
-│   ├── 14_Cell_Composition.R
-│   ├── 15_TME_Analysis.R
-│   │
-│   ├── phase1_malignant_subtyping/
-│   │   ├── 16_CNV_Classification.R          # epithelial/reference selection + CNV scoring
-│   │   ├── 17_Malignant_States.R             # re-clustering + AddModuleScore annotation
-│   │   ├── 18_Subtype_Comparison.R           # chi-square/Fisher + stacked bar plots
-│   │   └── 19_Subtype_Stats_Addendum.R       # sample-level Kruskal-Wallis + Dunn post-hoc
-│   │
-│   ├── phase2_cellchat/
-│   │   ├── 20_Build_Annotated_Object.R       # merge malignant-state labels into full object
-│   │   ├── 21_RunCellChat_Full.R             # full-object CellChat + pathway ID
-│   │   └── 22_Subtype_Stratified_CellChat.R  # per-subtype CellChat + liftCellChat + rankNet
-│   │
-│   └── phase3_bulk_validation/
-│       ├── 23_Gene_Signature.R               # signature derivation (state + pathway genes)
-│       ├── 24_Bulk_Validation_METABRIC.R     # signature scoring in bulk cohort
-│       └── 25_Survival_Analysis.R            # Kaplan-Meier + Cox regression
-│
-├── figures/
-├── results/
-│   └── TME/                                  # all intermediate .rds / .csv outputs
+├── .gitignore
 ├── README.md
-└── .gitignore
+├── Single_cell_RNAseq.Rproj
+└── main.R
 ```
 
 ---
 
 ## Running the Pipeline
-
-Install required packages:
 
 ```r
 install.packages(c("Seurat", "tidyverse", "patchwork", "data.table",
@@ -191,86 +359,49 @@ devtools::install_github("sqjin/CellChat")
 devtools::install_github("immunogenomics/presto")   # faster Wilcoxon test for CellChat
 ```
 
-Run the foundational pipeline, then each phase in order:
+Scripts are run sequentially from `scripts/` (foundational pipeline: QC → clustering → annotation → DE/enrichment), followed by the malignant subtyping, CellChat, and bulk validation stages described above.
 
-```r
-# Foundational pipeline
-source("scripts/01_Load_Data.R")
-...
-source("scripts/15_TME_Analysis.R")
-
-# Phase 1 — Malignant Cell Subtyping
-source("scripts/phase1_malignant_subtyping/16_CNV_Classification.R")
-source("scripts/phase1_malignant_subtyping/17_Malignant_States.R")
-source("scripts/phase1_malignant_subtyping/18_Subtype_Comparison.R")
-source("scripts/phase1_malignant_subtyping/19_Subtype_Stats_Addendum.R")
-
-# Phase 2 — Cell-Cell Communication
-source("scripts/phase2_cellchat/20_Build_Annotated_Object.R")
-source("scripts/phase2_cellchat/21_RunCellChat_Full.R")
-source("scripts/phase2_cellchat/22_Subtype_Stratified_CellChat.R")
-
-# Phase 3 — Bulk Validation
-source("scripts/phase3_bulk_validation/23_Gene_Signature.R")
-source("scripts/phase3_bulk_validation/24_Bulk_Validation_METABRIC.R")
-source("scripts/phase3_bulk_validation/25_Survival_Analysis.R")
-```
-
-**Note on compute resources:** Phase 1 CNV scoring and Phase 2 CellChat runs are memory- and time-intensive (CellChat's `computeCommunProb` can take 30–90+ minutes per run depending on cell/group counts). Scripts include downsampling and caching logic to keep runs feasible on a standard laptop (16 GB RAM). See in-script comments for tunable parameters (`max_cells_per_group`, `nboot`).
-
----
-
-## Biological Insights
-
-- Immune, stromal, and epithelial populations were resolved with characteristic markers (T cells: CD3D/CD3E/CD2/CCL5; NK cells: NKG7/GNLY; B cells: CD79A/MS4A1; macrophages: LST1/TYROBP; endothelial cells: VWF/EMCN/PLVAP; fibroblasts: COL1A1/COL3A1).
-- Malignant epithelial cells are **not a homogeneous population**: five transcriptionally distinct states exist, and their relative proportions are significantly shaped by molecular subtype — TNBC tumors are markedly more heterogeneous than ER+ or HER2+ tumors.
-- Midkine (MK) signaling emerges as a candidate subtype-differential communication axis, alongside established breast-TME pathways (TGF-β, SPP1, CXCL/CCL, MIF).
-- A signature combining the top subtype-associated malignant state with the MK pathway gene set is independently prognostic for overall survival in an external cohort of nearly 2,000 patients.
+**Note on compute resources:** CNV scoring and CellChat runs are memory- and time-intensive (CellChat's `computeCommunProb` can take 30–90+ minutes per run). Scripts include downsampling and caching logic to keep runs feasible on a standard laptop (16 GB RAM).
 
 ---
 
 ## Limitations
 
-This project prioritizes transparency about methodological trade-offs made under computational constraints:
-
 - **CNV classification** used a simplified chromosome-arm expression-deviation proxy rather than inferCNV/CopyKAT; cells are reported as "CNV-high (malignant candidates)" rather than definitively malignant, and this method has not yet been benchmarked against gold-standard tools on this dataset.
-- **Sample-level (patient-as-unit) statistics** were used as the primary evidence for subtype associations to avoid pseudoreplication inherent in treating individual cells as independent observations.
-- **CellChat runs** used downsampled cell counts per group and reduced permutation counts (`nboot = 25` vs. the default 100) for computational feasibility.
-- The final gene signature is dominated by canonical proliferation markers, which are near-universally prognostic in breast cancer cohorts; this result should be interpreted partly as a **positive-control validation of the overall pipeline**, and its value beyond established proliferation indices (e.g., Ki-67, PAM50 proliferation score) remains to be tested.
+- **Sample-level (patient-as-unit) statistics** were used as the primary evidence for subtype associations to avoid pseudoreplication.
+- **CellChat runs** used downsampled cell counts and reduced permutation counts (`nboot = 25` vs. the default 100) for computational feasibility.
+- The gene signature is dominated by canonical proliferation markers, near-universally prognostic in breast cancer cohorts; this result is best read as a **positive-control validation of the pipeline**, and its value beyond established proliferation indices (e.g., Ki-67, PAM50) remains to be tested.
 - Prognostic validation was performed in a **single bulk cohort (METABRIC)**; independent replication in TCGA-BRCA is a planned next step.
-
----
 
 ## 📌 Future Improvements
 
-- [ ] Validate the gene signature in TCGA-BRCA as an independent second cohort
-- [ ] Benchmark signature specificity against single-gene (Ki-67) and PAM50 proliferation-score baselines
+- [ ] Validate the gene signature in TCGA-BRCA as an independent cohort
+- [ ] Decompose the signature into proliferation-only vs. MK-only components to test whether MK genes add prognostic value
+- [ ] Benchmark signature specificity against Ki-67 / PAM50 proliferation-score baselines
 - [ ] Subtype-stratified survival analysis (test whether the signature remains prognostic within TNBC specifically)
 - [ ] Benchmark the CNV-score proxy method against inferCNV/CopyKAT
 - [ ] Monocle3 trajectory inference across malignant states
 - [ ] RNA velocity analysis
 - [ ] Spatial transcriptomics integration
-- [ ] Multi-omics integration
 
-*(Completed since the original project scope: ~~CellChat analysis~~ ✅, ~~Copy number variation inference~~ ✅)*
+*(Completed since the original project scope: ~~CellChat analysis~~ ✅ ~~Copy number variation inference~~ ✅)*
 
 ---
 
 ## 📜 Citation
 
-If this repository contributes to your research, please consider citing:
-
-- The original dataset: Wu, S.Z. et al. *A single-cell and spatially resolved atlas of human breast cancers.* Nat Genet 53, 1334–1347 (2021).
-- The METABRIC cohort: Curtis, C. et al. *Nature* 486, 346–352 (2012); Pereira, B. et al. *Nat Commun* 7, 11479 (2016).
-- Software: Seurat (Hao et al., 2021), SingleR (Aran et al., 2019), CellChat (Jin et al., 2021).
+- Dataset: Wu, S.Z. et al. *A single-cell and spatially resolved atlas of human breast cancers.* Nat Genet 53, 1334–1347 (2021).
+- METABRIC: Curtis, C. et al. *Nature* 486, 346–352 (2012); Pereira, B. et al. *Nat Commun* 7, 11479 (2016).
+- Software: Seurat v5 (Hao et al., *Nat Biotechnol* 2024); SingleR (Aran et al., *Nat Immunol* 2019); CellChat (Jin et al., *Nat Commun* 2021).
 
 ---
 
 ## 👩‍💻 Author
 
 **Bano Rani**
-BS Bioinformatics
-Department of Computer Science, University of Agriculture Faisalabad
+BS Bioinformatics · Department of Computer Science, University of Agriculture Faisalabad
+
+**Supervisor:** Dr. Sumaira Nishat, Department of Computer Science, University of Agriculture Faisalabad
 
 **Research Interests:** Single-cell Genomics · Cancer Bioinformatics · Machine Learning · Computational Biology · AI for Precision Medicine
 
