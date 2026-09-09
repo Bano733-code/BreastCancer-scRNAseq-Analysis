@@ -61,8 +61,7 @@ Gene Signature → METABRIC Validation → Survival Analysis
 | Survival HR (adjusted, METABRIC) | 1.31 (95% CI 1.12–1.53), p = 8.9 × 10⁻⁴ |
 
 <p align="center">
-<img src="results/TME/malignant_state_by_subtype_stackedbar.png" width="440">
-<img src="results/TME/survival_KM_signature.jpg" width="440">
+<img src="results/TME/malignant_state_by_subtype_stackedbar.png" width="440">       <img src="results/TME/survival_KM_signature.jpg" width="440">
 </p>
 
 ---
