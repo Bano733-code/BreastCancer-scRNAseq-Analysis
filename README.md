@@ -62,7 +62,7 @@ Gene Signature → METABRIC Validation → Survival Analysis
 
 <p align="center">
 <img src="results/TME/malignant_state_by_subtype_stackedbar.png" width="440">
-<img src="results/TME/survival_KM_signature.pdf" width="440">
+<img src="results/TME/survival_KM_signature.jpg" width="440">
 </p>
 
 ---
