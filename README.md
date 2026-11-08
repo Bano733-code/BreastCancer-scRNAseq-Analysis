@@ -68,7 +68,7 @@ Gene signature → METABRIC scoring → survival analysis → signature benchmar
 | What carries the prognostic signal | the proliferation genes; the MK genes add no significant information and the signature performs like the PAM50 proliferation score |
 
 <p align="center">
-<img src="results/TME/malignant_state_by_subtype_stackedbar.png" width="290">
+<img src="results/TME/malignant_state_by_subtype_stackedbar.png" height="70" width="290">
         
 <img src="results/TME/survival_KM_signature.jpg" height="70" width="290">
 </p>
