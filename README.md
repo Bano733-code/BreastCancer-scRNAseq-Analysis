@@ -69,7 +69,7 @@ Gene signature → METABRIC scoring → survival analysis → signature benchmar
 
 <p align="center">
 <img src="results/TME/malignant_state_by_subtype_stackedbar.png" width="290">
-<img src="figures/TME/Figure5D_MK_Subtype_Networks.png" width="290">
+        
 <img src="results/TME/survival_KM_signature.jpg" width="290">
 </p>
 
